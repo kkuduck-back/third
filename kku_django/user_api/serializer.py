@@ -21,9 +21,25 @@ class DefaultSerializer(serializers.ModelSerializer):
     plans = PlanSerializer(many=True, read_only=True) # model 에서 related_named 로 설정했던 거와 같은 이름인 plans 이어야 함
     class Meta:
         model = DefaultSubscription
-        fields = "__all__"
+        fields = (
+            'service_name',
+            'image_url',
+            'plans'
+        )
 
 class SubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
-        fields = "__all__"
+        fields = (
+            'user_id',
+            'id',
+            'service_name',
+            'plan_name',
+            'plan_price',
+            'cycle',
+            'head_count',
+            'start_date',
+            'end_date',
+            'share_id',
+            'image_url'
+        )

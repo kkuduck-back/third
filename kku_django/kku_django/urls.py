@@ -27,8 +27,16 @@ schema_view = get_schema_view(
     openapi.Info( 
         title="Kkuduck API", 
         default_version="v1", 
-        description="kkuducks를 위한 API 문서", 
+        description=
+        """
+        kkuducks를 위한 API 문서입니다.
+        
+        꾸덕은 구독 서비스를 관리할 수 있도록 도와주는 앱입니다.
+
+        팀원: 김혜지, 조희진, 최민경, 홍다희
+        """,
         terms_of_service="https://www.google.com/policies/terms/",
+        license=openapi.License(name="꾸덕s")
     ), 
     public=True, 
     permission_classes=(permissions.AllowAny,), 
