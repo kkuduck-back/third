@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from user_api import models
 
+#default 랑 plan 이랑 합치려고
+from itertools import chain
+
 from user_api.models import User, DefaultSubscription, Plan, Subscription
 from user_api.serializer import DefaultSerializer, PlanSerializer, UserSerializer, SubSerializer
 
@@ -34,6 +37,10 @@ class UserView(APIView):
             return Response({'result':'fail', 'data':user_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# 만약 dsub_serializer.data.get('service_name') == plan_serializer.data.get('service_name') 이라면
+#    둘을 합치고 sorted 한 뒤 중복된 값을 뺴라
+
+
 class DefaultSubView(APIView):
     def get(self, request,  **kwargs):
         if kwargs.get('uid') is None:
@@ -46,7 +53,30 @@ class DefaultSubView(APIView):
             # 등록한 plan 종류
             plans = Plan.objects.filter(dsub_id=uid)
             plan_serializer = PlanSerializer(plans, many=True)
-            return Response({'service_name':dsub_serializer.data.get('service_name'), 'image_url':dsub_serializer.data.get('image_url'), 'plans':plan_serializer.data}, status=status.HTTP_200_OK)  
+            return Response({'service_name':dsub_serializer.data.get('service_name'), 'image_url':dsub_serializer.data.get('image_url'), 'plans':plan_serializer.data}, status=status.HTTP_200_OK)   
+
+
+
+
+
+# class DefaultSubView(APIView):
+#     def get(self, request,  **kwargs):
+#         if kwargs.get('uid') is None:
+#             dsub_queryset = DefaultSubscription.objects.all()
+#             dsub_serializer = DefaultSerializer(dsub_queryset, many=True)
+#             return Response({'count': dsub_queryset.count(), 'data': dsub_serializer.data}, status = status.HTTP_200_OK)
+#         else:
+#             uid = kwargs.get('uid')
+#             dsub_serializer = DefaultSerializer(DefaultSubscription.objects.get(dsub_id=uid))
+#             # 등록한 plan 종류
+#             plans = Plan.objects.filter(dsub_id=uid)
+#             plan_serializer = PlanSerializer(plans, many=True)
+#             return Response({'service_name':dsub_serializer.data.get('service_name'), 'image_url':dsub_serializer.data.get('image_url'), 'plans':plan_serializer.data}, status=status.HTTP_200_OK)   
+
+
+
+
+
 
     # def post(self, request):
     #     dsub_serializer = DefaultSerializer(data=request.data)

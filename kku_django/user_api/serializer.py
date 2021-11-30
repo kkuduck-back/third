@@ -7,19 +7,21 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = "__all__"
 
-class DefaultSerializer(serializers.ModelSerializer):
+class PlanSerializer(serializers.ModelSerializer): # planserializer 가 반드시 default 보다 위에 있어야함
     class Meta:
-        model = DefaultSubscription
-        fields = "__all__"
-
-class PlanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Plan
+        model = Plan 
         fields = (
             'plan_name',
             'plan_price',
             'cycle'
         )
+
+class DefaultSerializer(serializers.ModelSerializer):
+
+    plans = PlanSerializer(many=True, read_only=True) # model 에서 related_named 로 설정했던 거와 같은 이름인 plans 이어야 함
+    class Meta:
+        model = DefaultSubscription
+        fields = "__all__"
 
 class SubSerializer(serializers.ModelSerializer):
     class Meta:
